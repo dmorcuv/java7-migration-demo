@@ -9,15 +9,41 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <!-- Compilar ya como Java 8 -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- Compilar como Java 6 -->
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Forzar versiones de plugins compatibles con JDK6 -->
+        <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
+        <maven.surefire.plugin.version>2.12.4</maven.surefire.plugin.version>
     </properties>
 
+    <build>
+      <plugins>
+        <!-- Configuración explícita del compilador -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven.compiler.plugin.version}</version>
+          <configuration>
+            <source>${maven.compiler.source}</source>
+            <target>${maven.compiler.target}</target>
+            <!-- evita usar <release> (no disponible/útil para Java6) -->
+          </configuration>
+        </plugin>
+
+        <!-- Plugin de tests (JUnit 4) -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven.surefire.plugin.version}</version>
+        </plugin>
+      </plugins>
+    </build>
 
     <dependencies>
-        <!-- JUnit 4 (lo migraremos a JUnit 5 más adelante) -->
+        <!-- JUnit 4 (compatible con Java 6) -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -25,7 +51,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JAXB (quitado del JDK a partir de Java 11, ideal para romper en 17) -->
+        <!-- JAXB (funciona con Java 6; si usas JDK6 ya estaba en el JDK, pero lo dejamos explícito) -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
